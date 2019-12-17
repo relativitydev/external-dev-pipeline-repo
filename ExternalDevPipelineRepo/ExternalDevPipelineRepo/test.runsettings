@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+	<!-- Parameters used by tests at run time -->
+	<TestRunParameters>
+		<Parameter name="WorkspaceID" value="-1" />
+		<Parameter name="TestWorkspaceName" value="Test Workspace Name" />
+		<Parameter name="TestWorkspaceTemplateName" value="Base Template" />
+		<Parameter name="AdminUsername" value="aaron.gilbert@relativity.co" />
+		<Parameter name="AdminPassword" value="Test1234!" />
+		<Parameter name="SQLUserName" value="" />
+		<Parameter name="SQLPassword" value="" />
+		<Parameter name="SQLServerAddress" value="" />
+		<Parameter name="TestingServiceRapPath" value="" />
+		<Parameter name="UploadTestingServiceRap" value="" />
+		<Parameter name="EmailTo" value="" />
+		<Parameter name="RSAPIServerAddress" value="kcura-ea-sandbox-services.relativity.one" />
+		<Parameter name="RESTServerAddress" value="kcura-ea-sandbox.relativity.one" />
+		<Parameter name="ServerBindingType" value="https" />
+		<Parameter name="RelativityInstanceAddress" value="kcura-ea-sandbox.relativity.one" />
+	</TestRunParameters>
+</RunSettings>

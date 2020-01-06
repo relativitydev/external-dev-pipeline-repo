@@ -36,14 +36,18 @@ steps:
     searchFolder: '$(System.DefaultWorkingDirectory)'
     distributionBatchType: 'basedOnAssembly'
     runSettingsFile: 'ExternalDevPipelineRepo\ExternalDevPipelineRepo\test.runsettings'
-    # overrideTestrunParameters: 
-    #   -TestWorkspaceTemplateName "$(testWorkspaceTemplateName)"
-    #   -AdminUsername $(adminUsername)
-    #   -AdminPassword $(adminPassword)
-    #   -SqlUserName $(sqlUserName)
-    #   -SqlPassword $(sqlPassword)
-    #   -SqlServerAddress $(sqlServerAddress)
-    #   -RSAPIServerAddress $(rsapiServerAddress)
-    #   -RESTServerAddress $(restServerAddress)
-    #   -ServerBindingType $(serverBindingType)
-    #   -RelativityInstanceAddress $(relativityInstanceAddress)
+    overrideTestrunParameters:
+      -WorkspaceID $(workspaceID)
+      -TestWorkspaceName $(testWorkspaceName) 
+      -TestWorkspaceTemplateName $(testWorkspaceTemplateName)
+      -AdminUsername $(adminUsername)
+      -AdminPassword $(adminPassword)
+      -SqlUserName $(sqlUserName)
+      -SqlPassword $(sqlPassword)
+      -SqlServerAddress $(sqlServerAddress)
+      -TestingServiceRapPath $(testingServiceRapPath)
+      -UploadTestingServiceRap $(uploadTestingServiceRap)
+      -RSAPIServerAddress $(rsapiServerAddress)
+      -RESTServerAddress $(restServerAddress)
+      -ServerBindingType $(serverBindingType)
+      -RelativityInstanceAddress $(relativityInstanceAddress)

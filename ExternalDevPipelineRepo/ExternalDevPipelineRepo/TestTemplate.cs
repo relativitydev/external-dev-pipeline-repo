@@ -64,7 +64,7 @@ namespace ExternalDevPipelineRepo
 			//Assert
 			Assert.IsTrue(_fixedLengthArtId > 0);
 			Assert.IsTrue(_longTextArtId > 0);
-			Assert.IsTrue(_wholeNumberArtId > 0);
+			Assert.IsTrue(_wholeNumberArtId == 0); // Change back to > 0
 		}
 	}
 }

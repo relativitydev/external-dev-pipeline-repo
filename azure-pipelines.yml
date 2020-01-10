@@ -35,6 +35,14 @@ steps:
   inputs:
     testSelector: 'testAssemblies'
     testAssemblyVer2: |
+      UnitTests\bin\**\UnitTests.dll
+    searchFolder: '$(System.DefaultWorkingDirectory)'
+    distributionBatchType: 'basedOnAssembly'
+
+- task: VSTest@2
+  inputs:
+    testSelector: 'testAssemblies'
+    testAssemblyVer2: |
       **\bin\**\ExternalDevPipelineRepo.dll
     searchFolder: '$(System.DefaultWorkingDirectory)'
     distributionBatchType: 'basedOnAssembly'

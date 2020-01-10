@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Application xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <ArtifactViewFields />
+  <Assemblies>
+    <Assembly>
+      <ArtifactId>7317306</ArtifactId>
+      <Keywords />
+      <Name>SampleAgent.dll</Name>
+      <Notes />
+    </Assembly>
+  </Assemblies>
+  <ResourceFiles />
+  <ExternalTabs />
+  <ExtractionDate>2019-12-18T19:15:45.3879435Z</ExtractionDate>
+  <Guid>55b4f11b-892d-4304-92ce-5d8d5fb210dc</Guid>
+  <Name>AzureTestApp</Name>
+  <Objects />
+  <ParentTabs />
+  <RelativityVersion>11.0.162.34</RelativityVersion>
+  <Version>1.0.0.9</Version>
+  <TabDisplay>false</TabDisplay>
+  <OriginSignature>bc0888e4-79b9-45e8-b384-95efdce5a7d4</OriginSignature>
+  <MasterScripts />
+  <ApplicationScripts />
+  <CustomPages />
+  <AgentTypes>
+    <AgentType>
+      <ArtifactId>1047020</ArtifactId>
+      <Guid>311c5570-eeaa-4a38-b2d8-59f51cc2d093</Guid>
+      <ApplicationVersion>1.0.0.1</ApplicationVersion>
+      <AgentTypeName>Agent Name</AgentTypeName>
+      <FullNameSpace>SampleAgent.RelativityAgent</FullNameSpace>
+      <DefaultInterval>5</DefaultInterval>
+      <DefaultLogging>1</DefaultLogging>
+      <MinInstanceEnvironment>0</MinInstanceEnvironment>
+      <MaxInstanceEnvironment>0</MaxInstanceEnvironment>
+      <MinInstanceServer>0</MinInstanceServer>
+      <MaxInstanceServer>0</MaxInstanceServer>
+      <MinInstanceResourcePool>0</MinInstanceResourcePool>
+      <MaxInstanceResourcePool>0</MaxInstanceResourcePool>
+      <AssemblyArtifactID>0</AssemblyArtifactID>
+      <AgentDll>SampleAgent.dll</AgentDll>
+      <Keywords />
+      <Notes />
+      <Description />
+    </AgentType>
+  </AgentTypes>
+  <IsRelativityApplication>true</IsRelativityApplication>
+  <InstallEventHandlers />
+  <SavedSearches />
+  <SearchContainers />
+  <SearchProviders />
+  <EnvironmentVariables>
+    <SearchAsConditionCriteriaID>1000471</SearchAsConditionCriteriaID>
+    <FullTextAll>1000182</FullTextAll>
+  </EnvironmentVariables>
+  <GlobalApplication>false</GlobalApplication>
+  <RelativityScriptIds />
+  <ViewIds />
+  <DashboardIds />
+  <LayoutIds />
+  <FieldIds />
+  <ChoiceIds />
+  <ObjectTypeIds />
+  <TabIds />
+  <CustomPageIds />
+  <Locked>true</Locked>
+</Application>

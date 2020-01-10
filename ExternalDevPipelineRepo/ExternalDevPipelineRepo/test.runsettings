@@ -5,7 +5,7 @@
 		<Parameter name="WorkspaceID" value="-1" />
 		<Parameter name="TestWorkspaceName" value="Test Workspace Name" />
 		<Parameter name="TestWorkspaceTemplateName" value="Base Template" />
-		<Parameter name="AdminUsername" value="aaron.gilbert@relativity.co" />
+		<Parameter name="AdminUsername" value="priyauser@relativity.co" />
 		<Parameter name="AdminPassword" value="Test1234!" />
 		<Parameter name="SQLUserName" value="" />
 		<Parameter name="SQLPassword" value="" />

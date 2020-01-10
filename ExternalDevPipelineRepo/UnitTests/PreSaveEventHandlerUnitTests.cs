@@ -10,6 +10,7 @@ using PreSaveEventHandler = RelativityEventHandlers.PreSaveEventHandler;
 namespace UnitTests
 {
 	[TestFixture]
+	[Description("Unit Tests")]
 	public class PreSaveEventHandlerUnitTests
 	{
 		private PreSaveEventHandler preSaveEventHandler;

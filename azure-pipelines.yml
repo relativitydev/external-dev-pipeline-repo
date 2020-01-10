@@ -35,7 +35,7 @@ steps:
   inputs:
     testSelector: 'testAssemblies'
     testAssemblyVer2: |
-      UnitTests\bin\**\UnitTests.dll
+      **\bin\**\UnitTests.dll
     searchFolder: '$(System.DefaultWorkingDirectory)'
     distributionBatchType: 'basedOnAssembly'
 

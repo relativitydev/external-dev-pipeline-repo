@@ -67,3 +67,9 @@ steps:
   inputs:
     workingDirectory: '$(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\SampleAppBuiler\bin'
     script: '.\kCura.RAPBuilder.exe /source:$(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\SampleAppBuiler\ /input:$(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\SampleAppBuiler\build.xml /servertype:local /version:1.0.0.3'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\SampleAppBuiler\bin\SampleAppBuiler.rap'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'

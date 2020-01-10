@@ -13,19 +13,20 @@ namespace UnitTests
 	public class PreSaveEventHandlerUnitTests
 	{
 		private PreSaveEventHandler preSaveEventHandler;
-		[SetUp]
+		[OneTimeSetUp]
 		public void SetUp()
 		{
 			preSaveEventHandler = new PreSaveEventHandler();
 		}
 
-		[TearDown]
+		[OneTimeTearDown]
 		public void TearDown()
 		{
 			preSaveEventHandler = null;
 		}
 
 		[Test]
+		[Description("Sample Unit Test")]
 		public void SampleUnitTest1()
 		{
 			// Arrange / Act

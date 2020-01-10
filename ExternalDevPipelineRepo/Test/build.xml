@@ -1,0 +1,13 @@
+﻿<BuildTools>
+	<RAPBuilder>
+		<Applications>
+			<Application name="Test">
+				<Destination>bin\Test.rap</Destination>
+				<ApplicationSchema>application.xml</ApplicationSchema>
+				<Assemblies/>
+				<ResourceFiles />
+				<CustomPages />
+			</Application>
+		</Applications>
+	</RAPBuilder>
+</BuildTools>

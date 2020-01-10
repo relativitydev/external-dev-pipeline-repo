@@ -1,0 +1,15 @@
+<BuildTools>
+  <RAPBuilder>
+    <Applications>
+      <Application name="SampleAppBuiler">
+        <Destination>bin\SampleAppBuiler.rap</Destination>
+        <ApplicationSchema>application.xml</ApplicationSchema>
+        <Assemblies>
+          <Assembly>bin\SampleAgent.dll</Assembly>
+        </Assemblies>
+        <ResourceFiles />
+        <CustomPages />
+      </Application>
+    </Applications>
+  </RAPBuilder>
+</BuildTools>

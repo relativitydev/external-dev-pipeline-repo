@@ -65,10 +65,5 @@ steps:
 
 - task: CmdLine@2
   inputs:
-    script: '
-    cd $(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\SampleAppBuiler\bin
-
-- task: CmdLine@2
-  inputs:
-    script: |
-      .\kCura.RAPBuilder.exe /source:"$(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\SampleAppBuiler\" /input:"$(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\SampleAppBuiler\build.xml" /servertype:local /version:1.0.0.3'
+    workingDirectory: '$(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\SampleAppBuiler\bin'
+    script: '.\kCura.RAPBuilder.exe /source:"$(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\SampleAppBuiler\" /input:"$(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\SampleAppBuiler\build.xml" /servertype:local /version:1.0.0.3'

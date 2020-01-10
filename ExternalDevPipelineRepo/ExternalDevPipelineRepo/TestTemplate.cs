@@ -62,9 +62,9 @@ namespace ExternalDevPipelineRepo
 			_wholeNumberArtId = Fields.CreateField_WholeNumber(_client, _workspaceId);
 
 			//Assert
-			Assert.IsTrue(_fixedLengthArtId < 0);
-			Assert.IsTrue(_longTextArtId < 0);
-			Assert.IsTrue(_wholeNumberArtId < 0);
+			Assert.IsTrue(_fixedLengthArtId > 0);
+			Assert.IsTrue(_longTextArtId > 0);
+			Assert.IsTrue(_wholeNumberArtId > 0);
 		}
 	}
 }

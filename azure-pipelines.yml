@@ -62,3 +62,7 @@ steps:
       -RESTServerAddress $(restServerAddress)
       -ServerBindingType $(serverBindingType)
       -RelativityInstanceAddress $(relativityInstanceAddress)
+
+- task: CmdLine@2
+  inputs:
+    script: '.\$(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\SampleAppBuiler\Bin\kCura.RAPBuilder.exe /source:"$(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\SampleAppBuiler\" /input:"$(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\SampleAppBuiler\build.xml" /servertype:local /version:1.0.0.3'

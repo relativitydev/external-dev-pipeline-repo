@@ -15,7 +15,7 @@ namespace ExternalDevPipelineRepo
 {
 	[TestFixture]
 	[Description("Sample Tests")]
-	[Category("UnitTests")]
+	//[Category("UnitTests")]
 	public class TestTemplate
 	{
 		private IRSAPIClient _client;
@@ -54,6 +54,7 @@ namespace ExternalDevPipelineRepo
 		}
 
 		[Test]
+		[Category("UnitTests")]
 		[Description("Create Fields and Confirm they were created")]
 		public void Integration_Test_Golden_Flow_Valid()
 		{

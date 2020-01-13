@@ -3,8 +3,8 @@
 # Add steps that publish symbols, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
 
-trigger:
-- master
+# trigger:
+# - master
 
 pr:
 - master
@@ -20,10 +20,12 @@ variables:
 steps:
 - task: NuGetToolInstaller@1
 
+# Restore Nuget Packages
 - task: NuGetCommand@2
   inputs:
     restoreSolution: '$(solution)'
 
+# Build Solution
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
@@ -31,6 +33,7 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
+# Run Unit Tests
 - task: VSTest@2
   inputs:
     testSelector: 'testAssemblies'
@@ -39,6 +42,7 @@ steps:
     searchFolder: '$(System.DefaultWorkingDirectory)'
     distributionBatchType: 'basedOnAssembly'
 
+# Run Integration Tests
 - task: VSTest@2
   inputs:
     testSelector: 'testAssemblies'
@@ -63,11 +67,13 @@ steps:
       -ServerBindingType $(serverBindingType)
       -RelativityInstanceAddress $(relativityInstanceAddress)
 
+# Build Rap File
 - task: CmdLine@2
   inputs:
     workingDirectory: '$(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\SampleAppBuiler\bin'
     script: '.\kCura.RAPBuilder.exe /source:$(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\SampleAppBuiler\ /input:$(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\SampleAppBuiler\build.xml /servertype:local /version:1.0.0.3'
 
+# Push Rap File to Artifacts
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\SampleAppBuiler\bin\SampleAppBuiler.rap'

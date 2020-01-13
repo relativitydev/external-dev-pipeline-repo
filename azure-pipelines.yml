@@ -17,11 +17,11 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   ${{ if eq( variables['Build.SourceBranchName'], 'master' ) }}: 
-    buildNumber: $(buildVersion)
+    buildNumber: ""
   ${{ if ne( variables['Build.SourceBranchName'], 'master' ) }}: 
-    buildNumber: $(buildVersion)-DEV
+    buildNumber: "-DEV"
 
-name: $(buildNumber) 
+name: $(buildVersion)$(buildNumber) 
 
 steps:
 - task: NuGetToolInstaller@1

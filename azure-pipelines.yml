@@ -21,7 +21,7 @@ variables:
     buildCounter: ""
   ${{ if ne( variables['Build.SourceBranchName'], 'master' ) }}: 
     buildNumber: "-DEV"
-    buildCounter: $[counter(variables['buildVersion'], 1)]
+    buildCounter: $[counter(variables['build.reason'], 0)]
 
 name: $(buildVersion)$(buildNumber) 
 

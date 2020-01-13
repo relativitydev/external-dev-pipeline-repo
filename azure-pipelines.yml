@@ -35,6 +35,14 @@ steps:
   inputs:
     testSelector: 'testAssemblies'
     testAssemblyVer2: |
+      **\bin\**\UnitTests.dll
+    searchFolder: '$(System.DefaultWorkingDirectory)'
+    distributionBatchType: 'basedOnAssembly'
+
+- task: VSTest@2
+  inputs:
+    testSelector: 'testAssemblies'
+    testAssemblyVer2: |
       **\bin\**\ExternalDevPipelineRepo.dll
     searchFolder: '$(System.DefaultWorkingDirectory)'
     distributionBatchType: 'basedOnAssembly'
@@ -54,3 +62,14 @@ steps:
       -RESTServerAddress $(restServerAddress)
       -ServerBindingType $(serverBindingType)
       -RelativityInstanceAddress $(relativityInstanceAddress)
+
+- task: CmdLine@2
+  inputs:
+    workingDirectory: '$(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\SampleAppBuiler\bin'
+    script: '.\kCura.RAPBuilder.exe /source:$(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\SampleAppBuiler\ /input:$(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\SampleAppBuiler\build.xml /servertype:local /version:1.0.0.3'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\SampleAppBuiler\bin\SampleAppBuiler.rap'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'

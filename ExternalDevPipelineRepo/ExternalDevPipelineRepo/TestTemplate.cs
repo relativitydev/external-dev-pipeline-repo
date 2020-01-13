@@ -25,7 +25,7 @@ namespace ExternalDevPipelineRepo
 		private int _longTextArtId;
 		private int _wholeNumberArtId;
 
-		[OneTimeSetUp]
+		[SetUp]
 		public void Execute_TestFixtureSetup()
 		{
 			// Update Security Protocol
@@ -34,18 +34,12 @@ namespace ExternalDevPipelineRepo
 			//Setup for testing
 			TestHelper helper = new TestHelper(TestContext.CurrentContext);
 			_servicesManager = helper.GetServicesManager();
-
-			// implement_IHelper
-			//create client
-			_client = helper.GetServicesManager().GetProxy<IRSAPIClient>(ConfigurationHelper.ADMIN_USERNAME, ConfigurationHelper.DEFAULT_PASSWORD);
-
-
-			//Create workspace
+			_client = _servicesManager.GetProxy<IRSAPIClient>(ConfigurationHelper.ADMIN_USERNAME, ConfigurationHelper.DEFAULT_PASSWORD);
 			_workspaceId = CreateWorkspace.CreateWorkspaceAsync(_workspaceName, ConfigurationHelper.TEST_WORKSPACE_TEMPLATE_NAME, _servicesManager, ConfigurationHelper.ADMIN_USERNAME, ConfigurationHelper.DEFAULT_PASSWORD).Result;
 			_client.APIOptions.WorkspaceID = _workspaceId;
 		}
 
-		[OneTimeTearDown]
+		[TearDown]
 		public void Execute_TestFixtureTeardown()
 		{
 			//Delete Workspace

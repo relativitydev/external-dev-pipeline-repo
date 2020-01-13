@@ -9,9 +9,6 @@ trigger:
 pr:
 - master
 
-# name: $(buildVersion).$(rev:r)
-#   condition: eq(variables['Build.SourceBranch'], 'refs/heads/develop')
-
 pool:
   vmImage: 'windows-latest'
 

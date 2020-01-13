@@ -21,9 +21,10 @@ variables:
     buildCounter: ""
   ${{ if ne( variables['Build.SourceBranchName'], 'master' ) }}: 
     buildNumber: "-DEV"
-    buildCounter: $[counter(variables['build.reason'], 0)]
+    #buildCounter: $[counter(variables['build.reason'], 0)]
+    buildCounter: $[counter(variables['buildNumber'], 1)]
 
-name: $(buildVersion)$(buildNumber) 
+name: $(buildVersion)$(buildNumber)$(buildCounter)
 
 steps:
 - task: NuGetToolInstaller@1

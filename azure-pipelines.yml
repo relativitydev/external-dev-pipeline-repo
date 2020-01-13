@@ -18,8 +18,10 @@ variables:
   buildConfiguration: 'Release'
   ${{ if eq( variables['Build.SourceBranchName'], 'master' ) }}: 
     buildNumber: ""
+    buildCounter: ""
   ${{ if ne( variables['Build.SourceBranchName'], 'master' ) }}: 
-    buildNumber: -DEV$[counter(variables['buildNumber'], 1)]
+    buildNumber: "-DEV"
+    buildCounter: $[counter(variables['buildNumber'], 1)]
 
 name: $(buildVersion)$(buildNumber) 
 

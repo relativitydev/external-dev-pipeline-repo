@@ -38,6 +38,7 @@ steps:
       **\bin\**\UnitTests.dll
     searchFolder: '$(System.DefaultWorkingDirectory)'
     distributionBatchType: 'basedOnAssembly'
+    testFiltercriteria: 'TestCategory="UnitTests"'
 
 - task: VSTest@2
   inputs:

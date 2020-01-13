@@ -9,6 +9,8 @@ trigger:
 pr:
 - master
 
+name: $(buildVersion).$(rev:r)
+
 pool:
   vmImage: 'windows-latest'
 

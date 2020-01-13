@@ -15,6 +15,7 @@ namespace ExternalDevPipelineRepo
 {
 	[TestFixture]
 	[Description("Sample Tests")]
+	[Category("UnitTests")]
 	public class TestTemplate
 	{
 		private IRSAPIClient _client;

@@ -38,41 +38,38 @@ steps:
       **\bin\**\UnitTests.dll
     searchFolder: '$(System.DefaultWorkingDirectory)'
     distributionBatchType: 'basedOnAssembly'
-    # testFiltercriteria: 'TestCategory="UnitTests"'
 
+- task: VSTest@2
+  inputs:
+    testSelector: 'testAssemblies'
+    testAssemblyVer2: |
+      **\bin\**\ExternalDevPipelineRepo.dll
+    searchFolder: '$(System.DefaultWorkingDirectory)'
+    distributionBatchType: 'basedOnAssembly'
+    runSettingsFile: 'ExternalDevPipelineRepo\ExternalDevPipelineRepo\test.runsettings'
+    overrideTestrunParameters:
+      -WorkspaceID $(workspaceID)
+      -TestWorkspaceName $(testWorkspaceName) 
+      -TestWorkspaceTemplateName $(testWorkspaceTemplateName)
+      -AdminUsername $(adminUsername)
+      -AdminPassword $(adminPassword)
+      -SqlUserName $(sqlUserName)
+      -SqlPassword $(sqlPassword)
+      -SqlServerAddress $(sqlServerAddress)
+      -TestingServiceRapPath $(testingServiceRapPath)
+      -UploadTestingServiceRap $(uploadTestingServiceRap)
+      -RSAPIServerAddress $(rsapiServerAddress)
+      -RESTServerAddress $(restServerAddress)
+      -ServerBindingType $(serverBindingType)
+      -RelativityInstanceAddress $(relativityInstanceAddress)
 
+- task: CmdLine@2
+  inputs:
+    workingDirectory: '$(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\SampleAppBuiler\bin'
+    script: '.\kCura.RAPBuilder.exe /source:$(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\SampleAppBuiler\ /input:$(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\SampleAppBuiler\build.xml /servertype:local /version:1.0.0.3'
 
-# - task: VSTest@2
-#   inputs:
-#     testSelector: 'testAssemblies'
-#     testAssemblyVer2: |
-#       **\bin\**\ExternalDevPipelineRepo.dll
-#     searchFolder: '$(System.DefaultWorkingDirectory)'
-#     distributionBatchType: 'basedOnAssembly'
-#     runSettingsFile: 'ExternalDevPipelineRepo\ExternalDevPipelineRepo\test.runsettings'
-#     overrideTestrunParameters:
-#       -WorkspaceID $(workspaceID)
-#       -TestWorkspaceName $(testWorkspaceName) 
-#       -TestWorkspaceTemplateName $(testWorkspaceTemplateName)
-#       -AdminUsername $(adminUsername)
-#       -AdminPassword $(adminPassword)
-#       -SqlUserName $(sqlUserName)
-#       -SqlPassword $(sqlPassword)
-#       -SqlServerAddress $(sqlServerAddress)
-#       -TestingServiceRapPath $(testingServiceRapPath)
-#       -UploadTestingServiceRap $(uploadTestingServiceRap)
-#       -RSAPIServerAddress $(rsapiServerAddress)
-#       -RESTServerAddress $(restServerAddress)
-#       -ServerBindingType $(serverBindingType)
-#       -RelativityInstanceAddress $(relativityInstanceAddress)
-
-# - task: CmdLine@2
-#   inputs:
-#     workingDirectory: '$(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\SampleAppBuiler\bin'
-#     script: '.\kCura.RAPBuilder.exe /source:$(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\SampleAppBuiler\ /input:$(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\SampleAppBuiler\build.xml /servertype:local /version:1.0.0.3'
-
-# - task: PublishBuildArtifacts@1
-#   inputs:
-#     PathtoPublish: '$(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\SampleAppBuiler\bin\SampleAppBuiler.rap'
-#     ArtifactName: 'drop'
-#     publishLocation: 'Container'
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\SampleAppBuiler\bin\SampleAppBuiler.rap'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'

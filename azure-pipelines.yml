@@ -17,9 +17,9 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   ${{ if eq( variables['Build.SourceBranchName'], 'master' ) }}: 
-    buildNumber: $(buildVersion)
+    buildNumber: '$(buildVersion)'
   ${{ if ne( variables['Build.SourceBranchName'], 'master' ) }}: 
-    buildNumber: $(buildVersion)-DEV-$(rev:r)
+    buildNumber: '$(buildVersion)-DEV-$(rev:r)'
 
 name: $(buildNumber) 
 

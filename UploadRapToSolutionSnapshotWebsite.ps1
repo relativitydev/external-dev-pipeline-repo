@@ -11,6 +11,24 @@ Clear-Host
 [string] $uploadApplicationVersionFileAsyncUrl = "https://$($server)/api/external/UploadApplicationVersionFileAsync"
 $global:salesforceSessionObject = $null
 
+function Write-Empty-Message() {
+  Write-Host ""
+}
+
+function Write-Method-Call-Message($message) {
+  Write-Empty-Message
+  Write-Host -ForegroundColor Cyan $message
+}
+
+function Write-Message($message) {
+  Write-Empty-Message
+  Write-Host -ForegroundColor Green $message
+}
+
+function Write-Error-Message($message) {
+  Write-Empty-Message
+  Write-Host -ForegroundColor Red $message
+}
 
 function GetSessionId() {
   try {

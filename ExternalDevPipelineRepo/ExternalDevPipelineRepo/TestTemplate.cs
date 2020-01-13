@@ -34,9 +34,7 @@ namespace ExternalDevPipelineRepo
 			//Setup for testing
 			TestHelper helper = new TestHelper(TestContext.CurrentContext);
 			_servicesManager = helper.GetServicesManager();
-
-			// implement_IHelper
-			//create clientgit 
+			_client = _servicesManager.GetProxy<IRSAPIClient>(ConfigurationHelper.ADMIN_USERNAME, ConfigurationHelper.DEFAULT_PASSWORD);
 			_workspaceId = CreateWorkspace.CreateWorkspaceAsync(_workspaceName, ConfigurationHelper.TEST_WORKSPACE_TEMPLATE_NAME, _servicesManager, ConfigurationHelper.ADMIN_USERNAME, ConfigurationHelper.DEFAULT_PASSWORD).Result;
 			_client.APIOptions.WorkspaceID = _workspaceId;
 		}

@@ -15,7 +15,6 @@ namespace ExternalDevPipelineRepo
 {
 	[TestFixture]
 	[Description("Sample Tests")]
-	//[Category("UnitTests")]
 	public class TestTemplate
 	{
 		private IRSAPIClient _client;
@@ -37,11 +36,7 @@ namespace ExternalDevPipelineRepo
 			_servicesManager = helper.GetServicesManager();
 
 			// implement_IHelper
-			//create client
-			_client = helper.GetServicesManager().GetProxy<IRSAPIClient>(ConfigurationHelper.ADMIN_USERNAME, ConfigurationHelper.DEFAULT_PASSWORD);
-
-
-			//Create workspace
+			//create clientgit 
 			_workspaceId = CreateWorkspace.CreateWorkspaceAsync(_workspaceName, ConfigurationHelper.TEST_WORKSPACE_TEMPLATE_NAME, _servicesManager, ConfigurationHelper.ADMIN_USERNAME, ConfigurationHelper.DEFAULT_PASSWORD).Result;
 			_client.APIOptions.WorkspaceID = _workspaceId;
 		}
@@ -54,7 +49,6 @@ namespace ExternalDevPipelineRepo
 		}
 
 		[Test]
-		[Category("UnitTests")]
 		[Description("Create Fields and Confirm they were created")]
 		public void Integration_Test_Golden_Flow_Valid()
 		{

@@ -9,7 +9,8 @@ trigger:
 pr:
 - master
 
-name: $(buildVersion).$(rev:r)
+# name: $(buildVersion).$(rev:r)
+#   condition: eq(variables['Build.SourceBranch'], 'refs/heads/develop')
 
 pool:
   vmImage: 'windows-latest'
@@ -18,6 +19,12 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  ${{ if eq( variables['Build.SourceBranchName'], 'master' ) }}: 
+    buildVersion: $(buildVersion)
+  ${{ if ne( variables['Build.SourceBranchName'], 'master' ) }}: 
+    buildVersion: $(buildVersion)-DEV-$(rev:r)
+
+name: $(buildVersion) 
 
 steps:
 - task: NuGetToolInstaller@1

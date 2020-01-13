@@ -25,7 +25,7 @@ namespace ExternalDevPipelineRepo
 		private int _longTextArtId;
 		private int _wholeNumberArtId;
 
-		[OneTimeSetUp]
+		[SetUp]
 		public void Execute_TestFixtureSetup()
 		{
 			// Update Security Protocol
@@ -41,7 +41,7 @@ namespace ExternalDevPipelineRepo
 			_client.APIOptions.WorkspaceID = _workspaceId;
 		}
 
-		[OneTimeTearDown]
+		[TearDown]
 		public void Execute_TestFixtureTeardown()
 		{
 			//Delete Workspace

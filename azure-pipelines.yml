@@ -43,39 +43,39 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-# # Run Unit Tests
-# - task: VSTest@2
-#   inputs:
-#     testSelector: 'testAssemblies'
-#     testAssemblyVer2: |
-#       **\bin\**\UnitTests.dll
-#     searchFolder: '$(System.DefaultWorkingDirectory)'
-#     distributionBatchType: 'basedOnAssembly'
+# Run Unit Tests
+- task: VSTest@2
+  inputs:
+    testSelector: 'testAssemblies'
+    testAssemblyVer2: |
+      **\bin\**\UnitTests.dll
+    searchFolder: '$(System.DefaultWorkingDirectory)'
+    distributionBatchType: 'basedOnAssembly'
 
-# # Run Integration Tests
-# - task: VSTest@2
-#   inputs:
-#     testSelector: 'testAssemblies'
-#     testAssemblyVer2: |
-#       **\bin\**\ExternalDevPipelineRepo.dll
-#     searchFolder: '$(System.DefaultWorkingDirectory)'
-#     distributionBatchType: 'basedOnAssembly'
-#     runSettingsFile: 'ExternalDevPipelineRepo\ExternalDevPipelineRepo\test.runsettings'
-#     overrideTestrunParameters:
-#       -WorkspaceID $(workspaceID)
-#       -TestWorkspaceName $(testWorkspaceName) 
-#       -TestWorkspaceTemplateName $(testWorkspaceTemplateName)
-#       -AdminUsername $(adminUsername)
-#       -AdminPassword $(adminPassword)
-#       -SqlUserName $(sqlUserName)
-#       -SqlPassword $(sqlPassword)
-#       -SqlServerAddress $(sqlServerAddress)
-#       -TestingServiceRapPath $(testingServiceRapPath)
-#       -UploadTestingServiceRap $(uploadTestingServiceRap)
-#       -RSAPIServerAddress $(rsapiServerAddress)
-#       -RESTServerAddress $(restServerAddress)
-#       -ServerBindingType $(serverBindingType)
-#       -RelativityInstanceAddress $(relativityInstanceAddress)
+# Run Integration Tests
+- task: VSTest@2
+  inputs:
+    testSelector: 'testAssemblies'
+    testAssemblyVer2: |
+      **\bin\**\ExternalDevPipelineRepo.dll
+    searchFolder: '$(System.DefaultWorkingDirectory)'
+    distributionBatchType: 'basedOnAssembly'
+    runSettingsFile: 'ExternalDevPipelineRepo\ExternalDevPipelineRepo\test.runsettings'
+    overrideTestrunParameters:
+      -WorkspaceID $(workspaceID)
+      -TestWorkspaceName $(testWorkspaceName) 
+      -TestWorkspaceTemplateName $(testWorkspaceTemplateName)
+      -AdminUsername $(adminUsername)
+      -AdminPassword $(adminPassword)
+      -SqlUserName $(sqlUserName)
+      -SqlPassword $(sqlPassword)
+      -SqlServerAddress $(sqlServerAddress)
+      -TestingServiceRapPath $(testingServiceRapPath)
+      -UploadTestingServiceRap $(uploadTestingServiceRap)
+      -RSAPIServerAddress $(rsapiServerAddress)
+      -RESTServerAddress $(restServerAddress)
+      -ServerBindingType $(serverBindingType)
+      -RelativityInstanceAddress $(relativityInstanceAddress)
 
 # Build Rap File
 - task: CmdLine@2
@@ -90,7 +90,7 @@ steps:
     ArtifactName: 'RelativityApplication'
     publishLocation: 'Container'
 
-# Create Authentication Credentials
+# Get Instance Relativity Version
 - task: PowerShell@2
   inputs:
     targetType: 'inline'

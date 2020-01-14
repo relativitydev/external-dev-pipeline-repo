@@ -102,7 +102,7 @@ steps:
         'X-CSRF-Header' = '-'
         'Authorization' = 'Basic $base64'
       }
-      $Result = Invoke-RestMethod -Uri $Uri -Method Post -ContentType 'application/json'
+      $Result = Invoke-RestMethod -Uri $Uri -Method Post -ContentType 'application/json' -Headers $headers
       Write-Host $Result
       # Write-Host "##vso[task.setvariable variable=instanceRelativityVersion;]$Result"
 

@@ -95,9 +95,9 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      $bytes = [System.Text.Encoding]::ASCII.GetBytes($(adminUsername)+":"+$(adminPassword))
+      $bytes = [System.Text.Encoding]::ASCII.GetBytes("$(adminUsername):$(adminPassword)")
       $base64 = [System.Convert]::ToBase64String($bytes)
-      $Uri = [System.Uri]'$(serverBindingType)://$(restServerAddress)/relativity.rest/api/Relativity.Services.InstanceDetails.IInstanceDetailsModule/InstanceDetailsService/GetRelativityVersionAsync'
+      $Uri = [System.Uri]"$(serverBindingType)://$(restServerAddress)/relativity.rest/api/Relativity.Services.InstanceDetails.IInstanceDetailsModule/InstanceDetailsService/GetRelativityVersionAsync"
       $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
       $headers.Add("X-CSRF-Header", "-")
       $headers.Add("Authorization", "Basic $base64")

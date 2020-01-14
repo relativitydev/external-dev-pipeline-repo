@@ -106,9 +106,9 @@ steps:
       Write-Host $Result
       Write-Host "##vso[task.setvariable variable=instanceRelativityVersion;]$Result"
 
-# # Create New Version / Push Rap File to Solution Snapshot
-# - task: PowerShell@2
-#   inputs:
-#     filePath: '$(System.DefaultWorkingDirectory)\UploadRapToSolutionSnapshotWebsite.ps1'
-#     arguments: '$(salesforceUsername) $(salesforcePassword) $(applicationGuid) $(buildVersion) $(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\SampleAppBuiler\bin\SampleAppBuiler.rap'
-#   condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'master'))
+# Create New Version / Push Rap File to Solution Snapshot
+- task: PowerShell@2
+  inputs:
+    filePath: '$(System.DefaultWorkingDirectory)\UploadRapToSolutionSnapshotWebsite.ps1'
+    arguments: '$(salesforceUsername) $(salesforcePassword) $(applicationGuid) $(buildVersion) $(instanceRelativityVersion) $(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\SampleAppBuiler\bin\SampleAppBuiler.rap'
+  condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'master'))

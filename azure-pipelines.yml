@@ -98,13 +98,12 @@ steps:
       $bytes = [System.Text.Encoding]::ASCII.GetBytes($(adminUsername)+":"+$(adminPassword))
       $base64 = [System.Convert]::ToBase64String($bytes)
       $Uri = [System.Uri]'$(serverBindingType)://$(restServerAddress)/relativity.rest/api/Relativity.Services.InstanceDetails.IInstanceDetailsModule/InstanceDetailsService/GetRelativityVersionAsync'
-      $headers = @{
-        'X-CSRF-Header' = '-'
-        'Authorization' = 'Basic $base64'
-      }
+      $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
+      $headers.Add("X-CSRF-Header", "-")
+      $headers.Add("Authorization", "Basic $base64")
       $Result = Invoke-RestMethod -Uri $Uri -Method Post -ContentType 'application/json' -Headers $headers
       Write-Host $Result
-      # Write-Host "##vso[task.setvariable variable=instanceRelativityVersion;]$Result"
+      Write-Host "##vso[task.setvariable variable=instanceRelativityVersion;]$Result"
 
 # # Retrieve Instance Relativity Version
 # - task: InvokeRESTAPI@1

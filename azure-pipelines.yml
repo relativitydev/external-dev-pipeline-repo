@@ -22,6 +22,7 @@ variables:
   ${{ if ne( variables['Build.SourceBranchName'], 'master' ) }}: 
     developAbbreviation: "-DEV-"
     buildCounter: $[counter(variables['buildNumber'], 1)]
+  instanceRelativityVersion: ""
 
 
 name: $(buildVersion)$(developAbbreviation)$(buildCounter)
@@ -42,39 +43,39 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-# Run Unit Tests
-- task: VSTest@2
-  inputs:
-    testSelector: 'testAssemblies'
-    testAssemblyVer2: |
-      **\bin\**\UnitTests.dll
-    searchFolder: '$(System.DefaultWorkingDirectory)'
-    distributionBatchType: 'basedOnAssembly'
+# # Run Unit Tests
+# - task: VSTest@2
+#   inputs:
+#     testSelector: 'testAssemblies'
+#     testAssemblyVer2: |
+#       **\bin\**\UnitTests.dll
+#     searchFolder: '$(System.DefaultWorkingDirectory)'
+#     distributionBatchType: 'basedOnAssembly'
 
-# Run Integration Tests
-- task: VSTest@2
-  inputs:
-    testSelector: 'testAssemblies'
-    testAssemblyVer2: |
-      **\bin\**\ExternalDevPipelineRepo.dll
-    searchFolder: '$(System.DefaultWorkingDirectory)'
-    distributionBatchType: 'basedOnAssembly'
-    runSettingsFile: 'ExternalDevPipelineRepo\ExternalDevPipelineRepo\test.runsettings'
-    overrideTestrunParameters:
-      -WorkspaceID $(workspaceID)
-      -TestWorkspaceName $(testWorkspaceName) 
-      -TestWorkspaceTemplateName $(testWorkspaceTemplateName)
-      -AdminUsername $(adminUsername)
-      -AdminPassword $(adminPassword)
-      -SqlUserName $(sqlUserName)
-      -SqlPassword $(sqlPassword)
-      -SqlServerAddress $(sqlServerAddress)
-      -TestingServiceRapPath $(testingServiceRapPath)
-      -UploadTestingServiceRap $(uploadTestingServiceRap)
-      -RSAPIServerAddress $(rsapiServerAddress)
-      -RESTServerAddress $(restServerAddress)
-      -ServerBindingType $(serverBindingType)
-      -RelativityInstanceAddress $(relativityInstanceAddress)
+# # Run Integration Tests
+# - task: VSTest@2
+#   inputs:
+#     testSelector: 'testAssemblies'
+#     testAssemblyVer2: |
+#       **\bin\**\ExternalDevPipelineRepo.dll
+#     searchFolder: '$(System.DefaultWorkingDirectory)'
+#     distributionBatchType: 'basedOnAssembly'
+#     runSettingsFile: 'ExternalDevPipelineRepo\ExternalDevPipelineRepo\test.runsettings'
+#     overrideTestrunParameters:
+#       -WorkspaceID $(workspaceID)
+#       -TestWorkspaceName $(testWorkspaceName) 
+#       -TestWorkspaceTemplateName $(testWorkspaceTemplateName)
+#       -AdminUsername $(adminUsername)
+#       -AdminPassword $(adminPassword)
+#       -SqlUserName $(sqlUserName)
+#       -SqlPassword $(sqlPassword)
+#       -SqlServerAddress $(sqlServerAddress)
+#       -TestingServiceRapPath $(testingServiceRapPath)
+#       -UploadTestingServiceRap $(uploadTestingServiceRap)
+#       -RSAPIServerAddress $(rsapiServerAddress)
+#       -RESTServerAddress $(restServerAddress)
+#       -ServerBindingType $(serverBindingType)
+#       -RelativityInstanceAddress $(relativityInstanceAddress)
 
 # Build Rap File
 - task: CmdLine@2
@@ -89,9 +90,25 @@ steps:
     ArtifactName: 'RelativityApplication'
     publishLocation: 'Container'
 
+# Create Authentication Credentials
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      $bytes = [System.Text.Encoding]::ASCII.GetBytes($(adminUsername)+":"+$(adminPassword))
+      $base64 = [System.Convert]::ToBase64String($bytes)
+      $uriString = $(serverBindingType)+"://"+$(restServerAddress)+"/relativity.rest/api/Relativity.Services.InstanceDetails.IInstanceDetailsModule/InstanceDetailsService/GetRelativityVersionAsync"
+      $Uri = [System.Uri]$uriString
+      $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
+      $headers.Add("X-CSRF-Header", "-")
+      $headers.Add("Authorization", "Basic $base64")
+      $Result = Invoke-RestMethod -Uri $Uri -Method Post -ContentType 'application/json' -Headers $headers
+      Write-Host $Result
+      Write-Host "##vso[task.setvariable variable=instanceRelativityVersion;]$Result"
+
 # Create New Version / Push Rap File to Solution Snapshot
 - task: PowerShell@2
   inputs:
     filePath: '$(System.DefaultWorkingDirectory)\UploadRapToSolutionSnapshotWebsite.ps1'
-    arguments: '$(salesforceUsername) $(salesforcePassword) $(applicationGuid) $(buildVersion) $(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\SampleAppBuiler\bin\SampleAppBuiler.rap'
+    arguments: '$(salesforceUsername) $(salesforcePassword) $(applicationGuid) $(buildVersion) $(instanceRelativityVersion) $(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\SampleAppBuiler\bin\SampleAppBuiler.rap'
   condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'master'))

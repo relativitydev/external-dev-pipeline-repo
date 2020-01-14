@@ -4,12 +4,14 @@ Clear-Host
 [string] $salesforcePassword = $args[1]
 [string] $applicationGuid = $args[2]
 [string] $applicationVersion = $args[3]
-[string] $rapFilePath = $args[4]
+[string] $compatibleRelativityVersion = $args[4]
+[string] $rapFilePath = $args[5]
 
 
 [string] $server = 'solutionsnapshotdevelopmentapi.azurewebsites.net'
 [string] $uploadApplicationVersionFileAsyncUrl = "https://$($server)/api/external/UploadApplicationVersionFileAsync"
 [string] $createApplicationVersionAsyncUrl = "https://$($server)/api/external/CreateApplicationVersionAsync"
+[string] $readApplicationAsyncUrl = "https://$($server)/api/external/ReadApplicationAsync"
 $global:salesforceSessionObject = $null
 
 function Write-Empty-Message() {
@@ -49,6 +51,31 @@ function GetSessionId() {
   }
 }
 
+function ReadApplicationAsync() {
+  try {
+    Write-Method-Call-Message "Calling ReadApplicationAsync API"
+    $request = new-object psobject
+    $request | add-member noteproperty SalesforceSessionInfo $global:salesforceSessionObject
+    $request | add-member noteproperty ApplicationGuid $applicationGuid
+
+    $requestJson = $request | ConvertTo-Json
+    Write-Message "Request Json: $($requestJson)"
+
+    $response = Invoke-RestMethod -Uri $readApplicationAsyncUrl -Method Post -Body $requestJson -ContentType 'application/json' -Headers @{"x-csrf-header"="-"}
+    $responseJson = $response | ConvertTo-Json
+    Write-Message "Response Json: $($responseJson)"
+  }
+  catch {
+    Write-Error-Message "An error occured when calling ReadApplicationAsync API."
+    Write-Error-Message "Error Message: ($_)"
+    # Dig into the exception to get the Response details. Note that value__ is not a typo.
+    Write-Error-Message "Http Status Code: $($_.Exception.Response.StatusCode.value__)"
+    Write-Error-Message "Http Status Description: $($_.Exception.Response.StatusDescription)"
+    $responseJson = $_.Exception.Response | ConvertTo-Json
+    Write-Error-Message "Response Json: $($responseJson)"
+  }  
+}
+
 function CreateApplicationVersionAsync() {
   try {
     Write-Method-Call-Message "Calling CreateApplicationVersionAsync API"
@@ -60,7 +87,7 @@ function CreateApplicationVersionAsync() {
        
     $relativityVersionArray = @()
     $relativityVersionObject1 = new-object psobject
-    $relativityVersionObject1 | add-member noteproperty Version '10.0.133.17'
+    $relativityVersionObject1 | add-member noteproperty Version $compatibleRelativityVersion
     $relativityVersionArray += $relativityVersionObject1
 
     $request | add-member noteproperty RelativityVersions $relativityVersionArray
@@ -200,5 +227,6 @@ $LF = "`r`n"
 }
 
 GetSessionId
+# ReadApplicationAsync
 CreateApplicationVersionAsync
 UploadApplicationVersionFileAsync -FilePath $rapFilePath -ApplicationGuid $applicationGuid -ApplicationVersion $applicationVersion -SalesforceUserId $salesforceSessionObject.salesforceuserid -SessionId $salesforceSessionObject.sessionid -ServerUrl $salesforceSessionObject.serverurl

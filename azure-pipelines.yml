@@ -106,20 +106,6 @@ steps:
       Write-Host $Result
       Write-Host "##vso[task.setvariable variable=instanceRelativityVersion;]$Result"
 
-# # Retrieve Instance Relativity Version
-# - task: InvokeRESTAPI@1
-#   inputs:
-#     connectionType: 'connectedServiceName'
-#     method: 'POST'
-#     headers: |
-#       {
-#       "Content-Type":"application/json", 
-#       "X-CSRF-Header":"-",
-#       "Authorization"Basic : $(base64AuthenticationString)"
-#       }
-#     urlSuffix: '$(serverBindingType)://$(restServerAddress)/relativity.rest/api/Relativity.Services.InstanceDetails.IInstanceDetailsModule/InstanceDetailsService/GetRelativityVersionAsync'
-#     waitForCompletion: 'true'
-
 # # Create New Version / Push Rap File to Solution Snapshot
 # - task: PowerShell@2
 #   inputs:

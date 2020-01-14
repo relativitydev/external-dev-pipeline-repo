@@ -22,10 +22,6 @@ variables:
   ${{ if ne( variables['Build.SourceBranchName'], 'master' ) }}: 
     developAbbreviation: "-DEV-"
     buildCounter: $[counter(variables['buildNumber'], 1)]
-  salesforceUsername: 'customdev@kcura.com'
-  salesforcePassword: "'8c7HMwMWw6AqNPz$kuaN'"
-  applicationGuid: 'ff3590b5-673d-42d5-b442-8b081761c81b'
-  applicationVersion: '1.0.0.0'
 
 
 name: $(buildVersion)$(developAbbreviation)$(buildCounter)
@@ -97,5 +93,5 @@ steps:
 - task: PowerShell@2
   inputs:
     filePath: '$(System.DefaultWorkingDirectory)\UploadRapToSolutionSnapshotWebsite.ps1'
-    arguments: '$(salesforceUsername) $(salesforcePassword) $(applicationGuid) $(applicationVersion) $(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\SampleAppBuiler\bin\SampleAppBuiler.rap'
+    arguments: '$(salesforceUsername) $(salesforcePassword) $(applicationGuid) $(buildVersion) $(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\SampleAppBuiler\bin\SampleAppBuiler.rap'
   condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'master'))

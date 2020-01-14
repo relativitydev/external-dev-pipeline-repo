@@ -23,7 +23,7 @@ variables:
     developAbbreviation: "-DEV-"
     buildCounter: $[counter(variables['buildNumber'], 1)]
   salesforceUsername: 'customdev@kcura.com'
-  salesforcePassword: '8c7HMwMWw6AqNPz$kuaN'
+  salesforcePassword: "'8c7HMwMWw6AqNPz$kuaN'"
   applicationGuid: 'ff3590b5-673d-42d5-b442-8b081761c81b'
   applicationVersion: '1.0.0.0'
 

@@ -9,6 +9,7 @@ Clear-Host
 
 [string] $server = 'solutionsnapshotdevelopmentapi.azurewebsites.net'
 [string] $uploadApplicationVersionFileAsyncUrl = "https://$($server)/api/external/UploadApplicationVersionFileAsync"
+[string] $createApplicationVersionAsyncUrl = "https://$($server)/api/external/CreateApplicationVersionAsync"
 $global:salesforceSessionObject = $null
 
 function Write-Empty-Message() {
@@ -46,6 +47,45 @@ function GetSessionId() {
     Write-Error-Message "An error occured when retrieving SalesforceSessionInfo."    
     Write-Error-Message "Error Message: ($_)"
   }
+}
+
+function CreateApplicationVersionAsync() {
+  try {
+    Write-Method-Call-Message "Calling CreateApplicationVersionAsync API"
+    $request = new-object psobject
+    $request | add-member noteproperty SalesforceSessionInfo $global:salesforceSessionObject
+    $request | add-member noteproperty ApplicationGuid $applicationGuid
+    $request | add-member noteproperty Version $applicationVersion
+    $request | add-member noteproperty ReleaseNotes 'New Release from Azure Devops Pipeline'
+       
+    $relativityVersionArray = @()
+    $relativityVersionObject1 = new-object psobject
+    $relativityVersionObject1 | add-member noteproperty Version '10.0.133.17'
+    $relativityVersionArray += $relativityVersionObject1
+
+    $request | add-member noteproperty RelativityVersions $relativityVersionArray
+
+    $requestJson = $request | ConvertTo-Json
+    Write-Message "Request Json: $($requestJson)"
+
+    $response = Invoke-RestMethod -Uri $createApplicationVersionAsyncUrl -Method Post -Body $requestJson -ContentType 'application/json' -Headers @{"x-csrf-header"="-"}
+    $responseJson = $response | ConvertTo-Json
+    Write-Message "Created New Application Version"
+  }
+  catch {
+	if($_.ToString().Contains('Application Version already exists')){
+		Write-Error-Message "Application Version already exists"
+	}
+	else{
+		Write-Error-Message "An error occured when calling CreateApplicationVersionAsync API."
+		Write-Error-Message "Error Message: ($_)"
+		# Dig into the exception to get the Response details. Note that value__ is not a typo.
+		Write-Error-Message "Http Status Code: $($_.Exception.Response.StatusCode.value__)"
+		Write-Error-Message "Http Status Description: $($_.Exception.Response.StatusDescription)"
+		$responseJson = $_.Exception.Response | ConvertTo-Json
+		Write-Error-Message "Response Json: $($responseJson)"
+	}
+  }  
 }
 
 function UploadApplicationVersionFileAsync() {
@@ -145,16 +185,20 @@ $LF = "`r`n"
    ) -join $LF
 
   try {
+	  Write-Method-Call-Message "Calling method to get Upload Application Version Rap File"
+		
       # Submit form-data with Invoke-RestMethod-Cmdlet
       Invoke-RestMethod -Uri $uploadApplicationVersionFileAsyncUrl -Method Post -ContentType "multipart/form-data; boundary=`"$boundary`"" -Body $bodyLines -Credential $cred -Headers @{"x-csrf-header"="-"}
+	  
+	  Write-Message "Uploaded Application Version Rap File"
   }
-  # In case of emergency...
-  catch [System.Net.WebException] {
+	  # In case of emergency...
+	  catch [System.Net.WebException] {
       Write-Error( "REST-API-Call failed for '$URL': $_" )
       throw $_
   } 
 }
 
-
 GetSessionId
+CreateApplicationVersionAsync
 UploadApplicationVersionFileAsync -FilePath $rapFilePath -ApplicationGuid $applicationGuid -ApplicationVersion $applicationVersion -SalesforceUserId $salesforceSessionObject.salesforceuserid -SessionId $salesforceSessionObject.sessionid -ServerUrl $salesforceSessionObject.serverurl

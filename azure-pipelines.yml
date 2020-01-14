@@ -22,7 +22,7 @@ variables:
   ${{ if ne( variables['Build.SourceBranchName'], 'master' ) }}: 
     developAbbreviation: "-DEV-"
     buildCounter: $[counter(variables['buildNumber'], 1)]
-  base64AuthenticationString: ""
+  instanceRelativityVersion: ""
 
 
 name: $(buildVersion)$(developAbbreviation)$(buildCounter)
@@ -97,21 +97,28 @@ steps:
     script: |
       $bytes = [System.Text.Encoding]::ASCII.GetBytes($(adminUsername)+":"+$(adminPassword))
       $base64 = [System.Convert]::ToBase64String($bytes)
-      Write-Host "##vso[task.setvariable variable=base64AuthenticationString;]$base64"
-
-# Retrieve Instance Relativity Version
-- task: InvokeRESTAPI@1
-  inputs:
-    connectionType: 'connectedServiceName'
-    method: 'POST'
-    headers: |
-      {
-      "Content-Type":"application/json", 
-      "X-CSRF-Header":"-",
-      "Authorization"Basic : $(base64AuthenticationString)"
+      $Uri = $(serverBindingType)://$(restServerAddress)/relativity.rest/api/Relativity.Services.InstanceDetails.IInstanceDetailsModule/InstanceDetailsService/GetRelativityVersionAsync
+      $headers = @{
+        'X-CSRF-Header' = '-'
+        'Authorization' = 'Basic $base64'
       }
-    urlSuffix: '$(serverBindingType)://$(restServerAddress)/relativity.rest/api/Relativity.Services.InstanceDetails.IInstanceDetailsModule/InstanceDetailsService/GetRelativityVersionAsync'
-    waitForCompletion: 'true'
+      $Result = Invoke-RestMethod -Uri $Uri -Method Post -ContentType 'application/json'
+      Write-Host $Result
+      # Write-Host "##vso[task.setvariable variable=instanceRelativityVersion;]$Result"
+
+# # Retrieve Instance Relativity Version
+# - task: InvokeRESTAPI@1
+#   inputs:
+#     connectionType: 'connectedServiceName'
+#     method: 'POST'
+#     headers: |
+#       {
+#       "Content-Type":"application/json", 
+#       "X-CSRF-Header":"-",
+#       "Authorization"Basic : $(base64AuthenticationString)"
+#       }
+#     urlSuffix: '$(serverBindingType)://$(restServerAddress)/relativity.rest/api/Relativity.Services.InstanceDetails.IInstanceDetailsModule/InstanceDetailsService/GetRelativityVersionAsync'
+#     waitForCompletion: 'true'
 
 # # Create New Version / Push Rap File to Solution Snapshot
 # - task: PowerShell@2

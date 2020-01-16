@@ -59,10 +59,10 @@ steps:
   inputs:
     testSelector: 'testAssemblies'
     testAssemblyVer2: |
-      **\bin\**\ExternalDevPipelineIntegrationTests.dll
+      **\bin\**\ExternalDevPipelineRepo.dll
     searchFolder: '$(System.DefaultWorkingDirectory)'
     distributionBatchType: 'basedOnAssembly'
-    runSettingsFile: 'ExternalDevPipelineRepo\ExternalDevPipelineIntegrationTests\test.runsettings'
+    runSettingsFile: 'ExternalDevPipelineRepo\ExternalDevPipelineRepo\test.runsettings'
     overrideTestrunParameters:
       -WorkspaceID $(workspaceID)
       -TestWorkspaceName $(testWorkspaceName) 

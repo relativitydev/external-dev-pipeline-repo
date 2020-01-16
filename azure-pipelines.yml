@@ -5,9 +5,11 @@
 
 trigger:
 - master
+- develop
 
 pr:
 - master
+- develop
 
 pool:
   vmImage: 'windows-latest'
@@ -57,10 +59,10 @@ steps:
   inputs:
     testSelector: 'testAssemblies'
     testAssemblyVer2: |
-      **\bin\**\ExternalDevPipelineRepo.dll
+      **\bin\**\ExternalDevPipelineIntegrationTests.dll
     searchFolder: '$(System.DefaultWorkingDirectory)'
     distributionBatchType: 'basedOnAssembly'
-    runSettingsFile: 'ExternalDevPipelineRepo\ExternalDevPipelineRepo\test.runsettings'
+    runSettingsFile: 'ExternalDevPipelineRepo\ExternalDevPipelineIntegrationTests\test.runsettings'
     overrideTestrunParameters:
       -WorkspaceID $(workspaceID)
       -TestWorkspaceName $(testWorkspaceName) 
@@ -105,6 +107,7 @@ steps:
       $Result = Invoke-RestMethod -Uri $Uri -Method Post -ContentType 'application/json' -Headers $headers
       Write-Host $Result
       Write-Host "##vso[task.setvariable variable=instanceRelativityVersion;]$Result"
+  condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'master'))
 
 # Create New Version / Push Rap File to Solution Snapshot
 - task: PowerShell@2

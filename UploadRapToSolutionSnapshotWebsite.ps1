@@ -8,7 +8,7 @@ Clear-Host
 [string] $rapFilePath = $args[5]
 
 
-[string] $server = 'solutionsnapshotdevelopmentapi.azurewebsites.net'
+[string] $server = 'solutionsnapshotdevapi.azurewebsites.net'
 [string] $uploadApplicationVersionFileAsyncUrl = "https://$($server)/api/external/UploadApplicationVersionFileAsync"
 [string] $createApplicationVersionAsyncUrl = "https://$($server)/api/external/CreateApplicationVersionAsync"
 [string] $readApplicationAsyncUrl = "https://$($server)/api/external/ReadApplicationAsync"

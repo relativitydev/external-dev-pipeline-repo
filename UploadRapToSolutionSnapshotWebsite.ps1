@@ -12,6 +12,9 @@ Clear-Host
 [string] $uploadApplicationVersionFileAsyncUrl = "https://$($server)/api/external/UploadApplicationVersionFileAsync"
 [string] $createApplicationVersionAsyncUrl = "https://$($server)/api/external/CreateApplicationVersionAsync"
 [string] $readApplicationAsyncUrl = "https://$($server)/api/external/ReadApplicationAsync"
+
+[string] $solutionSnapshotSalesforceLoginHelperDllPath = "$PSScriptRoot\ExternalDevPipelineRepo\packages\RelativityDev.SolutionSnapshotLoginHelper.1.0.2\lib\net462\SolutionSnapshotSalesforceLoginHelper.dll"
+
 $global:salesforceSessionObject = $null
 
 function Write-Empty-Message() {
@@ -35,7 +38,8 @@ function Write-Error-Message($message) {
 
 function GetSessionId() {
   try {
-    [Reflection.Assembly]::LoadFile("$PSScriptRoot\SolutionSnapshotSalesforceLoginHelper.dll")
+	Write-Message $solutionSnapshotSalesforceLoginHelperDllPath
+    [Reflection.Assembly]::LoadFile($solutionSnapshotSalesforceLoginHelperDllPath)
     $salesforceSessionHelper = New-Object SolutionSnapshotSalesforceLoginHelper.SalesforceSessionHelper
 	  
     Write-Method-Call-Message "Calling method to get SalesforceSessionInfo"
@@ -49,31 +53,6 @@ function GetSessionId() {
     Write-Error-Message "An error occured when retrieving SalesforceSessionInfo."    
     Write-Error-Message "Error Message: ($_)"
   }
-}
-
-function ReadApplicationAsync() {
-  try {
-    Write-Method-Call-Message "Calling ReadApplicationAsync API"
-    $request = new-object psobject
-    $request | add-member noteproperty SalesforceSessionInfo $global:salesforceSessionObject
-    $request | add-member noteproperty ApplicationGuid $applicationGuid
-
-    $requestJson = $request | ConvertTo-Json
-    Write-Message "Request Json: $($requestJson)"
-
-    $response = Invoke-RestMethod -Uri $readApplicationAsyncUrl -Method Post -Body $requestJson -ContentType 'application/json' -Headers @{"x-csrf-header"="-"}
-    $responseJson = $response | ConvertTo-Json
-    Write-Message "Response Json: $($responseJson)"
-  }
-  catch {
-    Write-Error-Message "An error occured when calling ReadApplicationAsync API."
-    Write-Error-Message "Error Message: ($_)"
-    # Dig into the exception to get the Response details. Note that value__ is not a typo.
-    Write-Error-Message "Http Status Code: $($_.Exception.Response.StatusCode.value__)"
-    Write-Error-Message "Http Status Description: $($_.Exception.Response.StatusDescription)"
-    $responseJson = $_.Exception.Response | ConvertTo-Json
-    Write-Error-Message "Response Json: $($responseJson)"
-  }  
 }
 
 function CreateApplicationVersionAsync() {
@@ -227,6 +206,5 @@ $LF = "`r`n"
 }
 
 GetSessionId
-# ReadApplicationAsync
-CreateApplicationVersionAsync
-UploadApplicationVersionFileAsync -FilePath $rapFilePath -ApplicationGuid $applicationGuid -ApplicationVersion $applicationVersion -SalesforceUserId $salesforceSessionObject.salesforceuserid -SessionId $salesforceSessionObject.sessionid -ServerUrl $salesforceSessionObject.serverurl
+# CreateApplicationVersionAsync
+# UploadApplicationVersionFileAsync -FilePath $rapFilePath -ApplicationGuid $applicationGuid -ApplicationVersion $applicationVersion -SalesforceUserId $salesforceSessionObject.salesforceuserid -SessionId $salesforceSessionObject.sessionid -ServerUrl $salesforceSessionObject.serverurl

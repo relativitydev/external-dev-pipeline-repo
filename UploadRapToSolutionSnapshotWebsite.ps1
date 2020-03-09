@@ -206,5 +206,5 @@ $LF = "`r`n"
 }
 
 GetSessionId
-# CreateApplicationVersionAsync
-# UploadApplicationVersionFileAsync -FilePath $rapFilePath -ApplicationGuid $applicationGuid -ApplicationVersion $applicationVersion -SalesforceUserId $salesforceSessionObject.salesforceuserid -SessionId $salesforceSessionObject.sessionid -ServerUrl $salesforceSessionObject.serverurl
+CreateApplicationVersionAsync
+UploadApplicationVersionFileAsync -FilePath $rapFilePath -ApplicationGuid $applicationGuid -ApplicationVersion $applicationVersion -SalesforceUserId $salesforceSessionObject.salesforceuserid -SessionId $salesforceSessionObject.sessionid -ServerUrl $salesforceSessionObject.serverurl

@@ -36,6 +36,9 @@
     <Reference Include="rap-versioning, Version=0.0.0.3, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RelativityDev.RapBuilder.0.0.0.3-alpha\lib\rap-versioning.exe</HintPath>
     </Reference>
+    <Reference Include="SolutionSnapshotSalesforceLoginHelper, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RelativityDev.SolutionSnapshotLoginHelper.1.0.2\lib\net462\SolutionSnapshotSalesforceLoginHelper.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -57,6 +60,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

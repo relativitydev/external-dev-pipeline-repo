@@ -51,6 +51,9 @@
     <Reference Include="Relativity.Services.ServiceProxy, Version=1.0.1.627, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Relativity.ObjectManager.10.3.226.8\lib\net462\Relativity.Services.ServiceProxy.dll</HintPath>
     </Reference>
+    <Reference Include="SolutionSnapshotSalesforceLoginHelper, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RelativityDev.SolutionSnapshotLoginHelper.1.0.2\lib\net462\SolutionSnapshotSalesforceLoginHelper.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />

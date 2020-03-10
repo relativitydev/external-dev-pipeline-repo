@@ -70,9 +70,7 @@ function CreateApplicationVersionAsync() {
     $relativityVersionArray += $relativityVersionObject1
 
     $request | add-member noteproperty RelativityVersions $relativityVersionArray
-
     $requestJson = $request | ConvertTo-Json
-    Write-Message "Request Json: $($requestJson)"
 
     $response = Invoke-RestMethod -Uri $createApplicationVersionAsyncUrl -Method Post -Body $requestJson -ContentType 'application/json' -Headers @{"x-csrf-header"="-"}
     $responseJson = $response | ConvertTo-Json
@@ -191,7 +189,7 @@ $LF = "`r`n"
    ) -join $LF
 
   try {
-	  Write-Method-Call-Message "Calling method to get Upload Application Version Rap File"
+	  Write-Method-Call-Message "Calling UploadApplicationVersionFileAsync API" 
 		
       # Submit form-data with Invoke-RestMethod-Cmdlet
       Invoke-RestMethod -Uri $uploadApplicationVersionFileAsyncUrl -Method Post -ContentType "multipart/form-data; boundary=`"$boundary`"" -Body $bodyLines -Credential $cred -Headers @{"x-csrf-header"="-"}

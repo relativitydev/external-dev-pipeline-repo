@@ -102,6 +102,7 @@ steps:
   inputs:
     Contents: '$(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\packages\RelativityDev.SolutionSnapshotLoginHelper*\lib\net462\SolutionSnapshotSalesforceLoginHelper.dll'
     TargetFolder: '$(build.artifactstagingdirectory)'
+    flattenFolders: true
 
 # Push Rap File to Artifacts
 - task: PublishBuildArtifacts@1

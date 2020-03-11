@@ -100,7 +100,7 @@ steps:
 # Push Rap File to Artifacts
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(System.ArtifactStagingDirectory)'
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'uploadScript'
     publishLocation: 'Container'
 

@@ -7,9 +7,8 @@ trigger:
 - master
 - develop
 
-# pr:
-# - master
-# - develop
+pr:
+  - develop
 
 pool:
   vmImage: 'windows-latest'

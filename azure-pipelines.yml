@@ -97,6 +97,12 @@ steps:
     Contents: 'UploadRapToSolutionSnapshotWebsite.ps1'
     TargetFolder: '$(build.artifactstagingdirectory)'
 
+# Copy SolutionSnapshotLoginHelper .dll
+- task: CopyFiles@2
+  inputs:
+    Contents: '$(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\packages\RelativityDev.SolutionSnapshotLoginHelper*\lib\net462\SolutionSnapshotSalesforceLoginHelper.dll'
+    TargetFolder: '$(build.artifactstagingdirectory)'
+
 # Push Rap File to Artifacts
 - task: PublishBuildArtifacts@1
   inputs:

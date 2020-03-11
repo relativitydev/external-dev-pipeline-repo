@@ -98,6 +98,13 @@ steps:
     Contents: 'UploadRapToSolutionSnapshotWebsite.ps1'
     TargetFolder: '$(build.artifactstagingdirectory)'
 
+# Push Rap File to Artifacts
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(System.ArtifactStagingDirectory)'
+    ArtifactName: 'uploadScript'
+    publishLocation: 'Container'
+
 # # Get Instance Relativity Version
 # - task: PowerShell@2
 #   inputs:

@@ -13,7 +13,7 @@ Clear-Host
 [string] $createApplicationVersionAsyncUrl = "https://$($server)/api/external/CreateApplicationVersionAsync"
 [string] $readApplicationAsyncUrl = "https://$($server)/api/external/ReadApplicationAsync"
 
-[string] $solutionSnapshotSalesforceLoginHelperDllPath = "$PSScriptRoot\ExternalDevPipelineRepo\packages\RelativityDev.SolutionSnapshotLoginHelper.1.0.3\lib\net462\SolutionSnapshotSalesforceLoginHelper.dll"
+[string] $solutionSnapshotSalesforceLoginHelperDllPath = "$PSScriptRoot\SolutionSnapshotSalesforceLoginHelper.dll"
 
 $global:salesforceSessionObject = $null
 

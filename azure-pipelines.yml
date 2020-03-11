@@ -8,8 +8,7 @@ trigger:
 - develop
 
 pr:
-- master
-- develop
+  - develop
 
 pool:
   vmImage: 'windows-latest'
@@ -23,7 +22,7 @@ variables:
     buildCounter: ""
   ${{ if ne( variables['Build.SourceBranchName'], 'master' ) }}: 
     developAbbreviation: "-DEV-"
-    buildCounter: $[counter(variables['buildNumber'], 1)]
+    buildCounter: $[counter(variables['buildVersion'], 1)]
   instanceRelativityVersion: ""
 
 
@@ -92,26 +91,45 @@ steps:
     ArtifactName: 'RelativityApplication'
     publishLocation: 'Container'
 
-# Get Instance Relativity Version
-- task: PowerShell@2
+# Copy Script to Artifact Staging Directory
+- task: CopyFiles@2
   inputs:
-    targetType: 'inline'
-    script: |
-      $bytes = [System.Text.Encoding]::ASCII.GetBytes($(adminUsername)+":"+$(adminPassword))
-      $base64 = [System.Convert]::ToBase64String($bytes)
-      $uriString = $(serverBindingType)+"://"+$(restServerAddress)+"/relativity.rest/api/Relativity.Services.InstanceDetails.IInstanceDetailsModule/InstanceDetailsService/GetRelativityVersionAsync"
-      $Uri = [System.Uri]$uriString
-      $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
-      $headers.Add("X-CSRF-Header", "-")
-      $headers.Add("Authorization", "Basic $base64")
-      $Result = Invoke-RestMethod -Uri $Uri -Method Post -ContentType 'application/json' -Headers $headers
-      Write-Host $Result
-      Write-Host "##vso[task.setvariable variable=instanceRelativityVersion;]$Result"
-  condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'master'))
+    Contents: 'UploadRapToSolutionSnapshotWebsite.ps1'
+    TargetFolder: '$(build.artifactstagingdirectory)'
 
-# Create New Version / Push Rap File to Solution Snapshot
-- task: PowerShell@2
+# Copy SolutionSnapshotLoginHelper .dll
+- task: CopyFiles@2
   inputs:
-    filePath: '$(System.DefaultWorkingDirectory)\UploadRapToSolutionSnapshotWebsite.ps1'
-    arguments: '$(salesforceUsername) $(salesforcePassword) $(applicationGuid) $(buildVersion) $(instanceRelativityVersion) $(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\SampleAppBuiler\bin\SampleAppBuiler.rap'
-  condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'master'))
+    Contents: '$(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\packages\RelativityDev.SolutionSnapshotLoginHelper*\lib\net462\SolutionSnapshotSalesforceLoginHelper.dll'
+    TargetFolder: '$(build.artifactstagingdirectory)'
+
+# Push Rap File to Artifacts
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'uploadScript'
+    publishLocation: 'Container'
+
+# # Get Instance Relativity Version
+# - task: PowerShell@2
+#   inputs:
+#     targetType: 'inline'
+#     script: |
+#       $bytes = [System.Text.Encoding]::ASCII.GetBytes($(adminUsername)+":"+$(adminPassword))
+#       $base64 = [System.Convert]::ToBase64String($bytes)
+#       $uriString = $(serverBindingType)+"://"+$(restServerAddress)+"/relativity.rest/api/Relativity.Services.InstanceDetails.IInstanceDetailsModule/InstanceDetailsService/GetRelativityVersionAsync"
+#       $Uri = [System.Uri]$uriString
+#       $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
+#       $headers.Add("X-CSRF-Header", "-")
+#       $headers.Add("Authorization", "Basic $base64")
+#       $Result = Invoke-RestMethod -Uri $Uri -Method Post -ContentType 'application/json' -Headers $headers
+#       Write-Host $Result
+#       Write-Host "##vso[task.setvariable variable=instanceRelativityVersion;]$Result"
+#   condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'master'))
+
+# # Create New Version / Push Rap File to Solution Snapshot
+# - task: PowerShell@2
+#   inputs:
+#     filePath: '$(System.DefaultWorkingDirectory)\UploadRapToSolutionSnapshotWebsite.ps1'
+#     arguments: '$(salesforceUsername) $(salesforcePassword) $(applicationGuid) $(buildVersion) $(instanceRelativityVersion) $(System.DefaultWorkingDirectory)\ExternalDevPipelineRepo\SampleAppBuiler\bin\SampleAppBuiler.rap'
+#   condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'master'))

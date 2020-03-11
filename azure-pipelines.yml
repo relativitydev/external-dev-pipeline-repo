@@ -7,9 +7,8 @@ trigger:
 - master
 - develop
 
-# pr:
-# - master
-# - develop
+pr:
+  - develop
 
 pool:
   vmImage: 'windows-latest'
@@ -97,6 +96,13 @@ steps:
   inputs:
     Contents: 'UploadRapToSolutionSnapshotWebsite.ps1'
     TargetFolder: '$(build.artifactstagingdirectory)'
+
+# Push Rap File to Artifacts
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'uploadScript'
+    publishLocation: 'Container'
 
 # # Get Instance Relativity Version
 # - task: PowerShell@2

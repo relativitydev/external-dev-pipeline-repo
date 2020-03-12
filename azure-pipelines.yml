@@ -107,5 +107,5 @@ steps:
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'uploadScript'
+    ArtifactName: 'UploadRapFileScript'
     publishLocation: 'Container'

@@ -132,3 +132,65 @@ Adding Azure Key Vault Secrets to a Variable Group is very similar to adding a v
 - After adding the variables, save and make sure you link the variable group to your pipeline like how we did above.
 
 ![](images/newKeyVaultVariableGroup.png)
+
+### Initial *azure-pipelines.yml* Setup
+There are few things needed in our azure-pipelines.yml file. First let's take a look at the top of our file:
+
+![](images/initialYamlSetup/initialYamlSetup1.png)
+
+Let's dig into these individual sections deeper:
+- *trigger* - this specifies what branches to kick off a build when new code is pushed to those branches.
+  - we have this set to master and develop
+  - this can be set to none if you don't want it to run on any branch
+- *pr* - this specifies what branches to kick off a build when a pull request is made to merge into this branch.
+  - we have this set to develop so that a build for a pr only happens for a pr into develop
+  - this can be set to none if you don't want it to run on any branch
+- *pool*
+  - vmImage - this is the virtual machine image that the pipeline will run on
+    - We have this set to the latest windows image
+- *variables* - local variables to be used in the pipeline. 
+  - The variables solution, buildPlatform, and buildConfiguration are automatically provided.
+  - The block of code below sets the developAbbreviation and buildCounter variables based on whether the build is running on the master branch or not.
+  - If the branch is master than we set both variables to empty strings
+  - If the branch is not master then we set the developAbbreviation to "-DEV-" and buildCounter to a counter that increases on every build that is not on master
+    - The counter resets every time the buildVersion variable is changed
+    ![](images/initialYamlSetup/initialYamlSetup2.png)
+- *name* - this sets the name of build
+  - We are setting the name to $(buildVersion)$(developAbbreviation)$(buildCounter)
+    - So when the build is on master branch it will look like 1.0.0.0
+    - When the build is not on master branch it will look like 1.0.0.0-DEV-1
+  - Notice that $(buildVersion) is a reference to the buildVersion variable from our variable group that we created earlier.
+  
+### Restore Nuget Packages (Task name: NuGet)
+The first task in our pipeline which we want to look at is Restoring Nuget packages. This is a fairly simple task and is provided automatically when you create a new pipeline. Here is the Restore Nuget Packages task:
+
+![](images/restoreNugetPackages.png)
+
+- Inputs:
+  - *restoreSolution* - The path to the solution, packages.config, or project.json file that references the packages to be restored.
+  
+### Build Solution (Task name: Visual Studio build)
+The next task in our pipeline is Building our Solution. This is another task is provided automatically when you create a new pipeline. Here is the Build Solution task:
+
+![](images/buildSolution.png)
+
+- Inputs:
+  - *solution* - This is the path of the .sln file in our repository.
+  - *msbuildArgs* - Additional arguments to MSBuild.
+  - *platform* - Specifies the build platform that we are using. Specify the platform you want to build such as  Win32, x86, x64, or Any CPU.
+  - *configuration* - Specifies the build configuration that we are using. Specify the configuration you want to build such as *debug* or *release*.
+
+### Run Unit Tests (Task name: Visual Studio Test)
+A common task needed in CI/CD pipelines is to run Unit Tests. This can be done with the Visual Studio Test task. Here is the Run Unit Tests task:
+
+![](images/runUnitTests.png)
+
+- Inputs:
+  - *testSelector* - Use this option to specify one or more test assemblies that contain your tests. You can optionally specify a filter criteria to select only specific tests.
+    - you want it to be set to 'testAssemblies'
+  - *testAssemblyVer2* - Run tests from the specified files. The file paths are relative to the search folder. Supports multiple lines of minimatch patterns.
+    - you should set it to the path of the .dll of your unit test project. 
+  - *searchFolder* -  Folder to search for the test assemblies.
+    - is set to $(System.DefaultWorkingDirectory) which is the local path on the agent where your source code files are downloaded. For example: c:\agent_work\1\s
+  - *distributionBatchType* - A batch is a group of tests. A batch of tests runs at a time and results are published for that batch. If the job in which the task runs is set to use multiple agents, each agent picks up any available batches of tests to run in parallel.
+    - set it to 'basedOnAssembly' so tests from an assembly are batched together.

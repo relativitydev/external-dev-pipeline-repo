@@ -194,3 +194,75 @@ A common task needed in CI/CD pipelines is to run Unit Tests. This can be done w
     - is set to $(System.DefaultWorkingDirectory) which is the local path on the agent where your source code files are downloaded. For example: c:\agent_work\1\s
   - *distributionBatchType* - A batch is a group of tests. A batch of tests runs at a time and results are published for that batch. If the job in which the task runs is set to use multiple agents, each agent picks up any available batches of tests to run in parallel.
     - set it to 'basedOnAssembly' so tests from an assembly are batched together.
+
+### Run Integration Tests (Task name: Visual Studio Test)
+Running an integration test uses the same task as running Unit Tests in azure pipelines with a few changes. Before we get into the yml task, you have to have your integration tests in your repository set up to run with a .runsettings file to work on azure pipelines. For more information on configuring your tests using a .runsettings file, check out this link: https://docs.microsoft.com/en-us/visualstudio/test/configure-unit-tests-by-using-a-dot-runsettings-file?view=vs-2019. Once you have that set up for your repository, azure pipelines visual studio test task gives us the ability to override Test Run Parameters which are set in the .runsettings file. We created those variables in a variable group for our key vault earlier. If you are using TestHelpers for you integration tests, the variables which you need to set are:
+- WorkspaceID
+- TestWorkspaceName
+- TestWorkspaceTemplate
+- AdminUsername
+- AdminPassword
+- SqlUserName
+- SqlPassword
+- SqlServerAddress
+- TestingServiceRapPath
+- UploadTestingServiceRap
+- RSAPIServerAddress
+- RESTServerAddress
+- ServerBindingType
+- RelativityInstanceAddress
+
+**NOTE**: the values for all of these variables should be in quotation marks. Ex) "value"
+
+Here is the Run Integration Tests task:
+
+![](images/runIntegrationTests.png)
+
+- Inputs:
+  - Same inputs as Unit Tests, except testAssemblyVer2 is pointed at integration test project .dll
+  - *runSettingsFile* - Path to runsettings or testsettings file to use with the tests.
+  - *overrideTestrunParameters* - Override parameters defined in the TestRunParameters section of runsettings file or Properties section of testsettings file
+
+### Build Rap File (Task name: Command line)
+To build a rap file in our pipeline we will be using a Visual Studio template called RapCreator. To download the RapCreator visual studio template visit here: https://marketplace.visualstudio.com/items?itemName=RelativityODA.RapCreator. You can also checkout the rap-builder open source project: https://github.com/relativitydev/rap-builder. After downloading and installing the visual studio template, create a new project in your repository using the template:
+
+![](images/buildRapFile/buildRapFile1.png)
+
+The AppBuilder project will include:
+- application.xml file - you will export the application.xml of your actual rap in Relativity and replace the one in this project with the exported file.
+- build.xml file
+
+You need to Add References for other projects in the SampleAppBuiler app
+- Right-Click References, Select Add References
+- Select all the projects for you application (Agents, Event Handlers, Custom Page) and select OK
+
+Right click SampleAppBuilder, Select Manage Nuget Packages
+- Click Restore
+
+To build the rap file we can run the kCura.RAPBuilder.exe file
+- To run it call: .\kCura.RAPBuilder.exe /source:{app builder project path) /input:{build.xml path} /servertype:local /version:{rap version}
+- Example path to rap after running executable: sample-application\Source\SampleAppBuilder\bin\SampleAppBuilder.rap
+
+In our yaml file in azure pipelines, we're going to add a command line task to call the executable
+Here is the Build Rap File task:
+
+![](images/buildRapFile/buildRapFile2.png)
+
+- Inputs:
+  - *workingDirectory* - Specify the working directory in which you want to run the command. If you leave it empty, the working directory is $(Build.SourcesDirectory).
+  - *script* - Contents of the script you want to run
+  
+### Push Rap File to Artifacts (Task name: Publish build artifacts)
+After building our rap file, we want to publish it to our pipeline to make it accessible. We do this with the Publish build artifacts task. Here is the Push Rap File to Artifacts task:
+
+![](images/pushRapFileToArtifacts/pushRapFileToArtifacts1.png)
+
+- Inputs:
+  - *PathtoPublish* - The folder or file path to publish. This can be a fully-qualified path or a path relative to the root of the repository. Wildcards are not supported.
+  - *ArtifactName* - Specify the name of the artifact that you want to create. It can be whatever you want.
+  - *publishLocation* - Choose whether to store the artifact in Azure Pipelines (Container), or to copy it to a file share (FilePath) that must be accessible from the build agent.
+  
+After the build pipeline runs you can find the published build artifact here:
+
+![](images/pushRapFileToArtifacts/pushRapFileToArtifacts2.png)
+![](images/pushRapFileToArtifacts/pushRapFileToArtifacts3.png)

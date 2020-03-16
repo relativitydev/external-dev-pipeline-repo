@@ -266,3 +266,138 @@ After the build pipeline runs you can find the published build artifact here:
 
 ![](images/pushRapFileToArtifacts/pushRapFileToArtifacts2.png)
 ![](images/pushRapFileToArtifacts/pushRapFileToArtifacts3.png)
+
+## Create a Release Pipeline to push the Rap File to the Solution Snapshot Website
+**NOTE**: In order to do this you must have already signed up for the Solution Snapshot Website with your Relativity Community Account
+
+### Build Pipeline Changes: Copy and Publish Upload Script and SolutionSnapshotSalesforceLoginHelper.dll 
+We want to be able to run a script to upload our newly created Rap file to the Solution Snapshot Website. First we want to add the following NuGet package to a project in the repository:
+- https://www.nuget.org/packages/RelativityDev.SolutionSnapshotLoginHelper/
+
+This is used in the script as a helper to Login to the Solution Snapshot Website.
+We also want to add the following script to the root of the repository:
+- [UploadRapToSolutionSnapshotWebsite.ps1](UploadRapToSolutionSnapshotWebsite.ps1)
+
+Next, we want to add a few tasks to our pipeline. These tasks will copy/publish the Script and the .dll from the NuGet package so that we can use them in a release pipeline. First let's look at copying the files to the Artifact Staging Directory:
+
+![](images/buildPipelineChanges/buildPipelineChanges1.png)
+
+- Inputs:
+  - *Contents* - File paths to include as part of the copy.
+  - *TargetFolder* - Target folder or UNC path files will copy to.
+  - *flattenFolders* - Flatten the folder structure and copy all files into the specified target folder.
+  
+Next we want to publish the Script Files that we just copied to the Artifact Staging Directory to a container. This is similar to what we did with publishing the Rap File artifact:
+
+![](images/buildPipelineChanges/buildPipelineChanges2.png)
+
+- Inputs:
+- *PathtoPublish* - The folder or file path to publish. This can be a fully-qualified path or a path relative to the root of the repository. Wildcards are not supported.
+- *ArtifactName* - Specify the name of the artifact that you want to create. It can be whatever you want.
+- *publishLocation* - Choose whether to store the artifact in Azure Pipelines (Container), or to copy it to a file share (FilePath) that must be accessible from the build agent.
+
+After running these tasks, you will be able to find the published Script and .dll in same place where the published rap was.
+![](images/buildPipelineChanges/buildPipelineChanges3.png)
+![](images/buildPipelineChanges/buildPipelineChanges4.png)
+
+### Create Release Pipeline
+Now, we want to create a release pipeline that runs after a successful build on the master branch.
+This pipeline will:
+- Obtain the Relativity Version of the environment which we ran our tests against by making a rest call
+- Use the Relativity Version to update the compatibility of the application in the Solution Snapshot Website by calling the UploadRapToSolutionSnapshotWebsite.ps1 script 
+
+Click on the Releases tab:
+
+![](images/createReleasePipeline/createReleasePipeline1.png)
+
+Then select New Release Pipeline (If you are asked to pick a template skip this). You will now see this screen:
+
+![](images/createReleasePipeline/createReleasePipeline2.png)
+
+There are a few pieces to note here:
+- *Artifacts* - a deployable component of your application. It is typically produced through a Continuous Integration or a build pipeline
+- *Stages* - Stages are the major divisions in a pipeline: "build this app", "run these tests", and "deploy to pre-production" are good examples of stages. They are a logical boundary in your pipeline at which you can pause the pipeline and perform various checks.
+
+So in our case the artifact will be the build pipeline which we had previously create and the stages will be tasks to get the relativity version of the environment that we ran our tests against and then to call our script.
+
+Click Add next to Artifacts to add a new artifact.
+- Select source type as build
+- Then choose your project and your build pipeline
+- Choose the Default version and alias which make sense to your project.
+
+![](images/createReleasePipeline/createReleasePipeline3.png)
+
+Next add a new Empty Stage job:
+
+![](images/createReleasePipeline/createReleasePipeline4.png)
+
+Now that we have our stage we want to give it access to the variables in our variable group.
+- Under the releases tab, go to *Variables* → *Variable groups* → *Link variable group*
+- Link the Build Information variable group to the Stage that we just created:
+
+![](images/createReleasePipeline/createReleasePipeline5.png)
+
+Next click on where it says *1 job, 0 task* under the created stage:
+
+![](images/createReleasePipeline/createReleasePipeline6.png)
+
+Next add a new PowerShell task:
+
+![](images/createReleasePipeline/createReleasePipeline7.png)
+
+We'll add a task to Get the Instance Relativity Version. This will run a script that make a REST call to the Relativity Instance to return the version. The last line of this script stores the version value in a variable called *instanceRelativityVersion*. Add the following task to Get the Instance Relativity Version:
+
+![](images/createReleasePipeline/createReleasePipeline8.png)
+
+**Get Instance Relativity Version Inline script**:
+--------------------------------------------------------------------------------------
+
+$bytes = [System.Text.Encoding]::ASCII.GetBytes($(adminUsername)+":"+$(adminPassword))
+
+$base64 = [System.Convert]::ToBase64String($bytes)
+
+$uriString = $(serverBindingType)+"://"+$(restServerAddress)+"/relativity.rest/api/Relativity.Services.InstanceDetails.IInstanceDetailsModule/InstanceDetailsService/GetRelativityVersionAsync"
+
+$Uri = [System.Uri]$uriString
+
+$headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
+
+$headers.Add("X-CSRF-Header", "-")
+
+$headers.Add("Authorization", "Basic $base64")
+
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+$Result = Invoke-RestMethod -Uri $Uri -Method Post -ContentType 'application/json' -Headers $headers
+
+Write-Host $Result
+
+Write-Host "##vso[task.setvariable variable=instanceRelativityVersion;]$Result"
+
+--------------------------------------------------------------------------------------
+
+Next we'll add another PowerShell Task to run our script.
+This task will run the Script to Upload our Rap File to the Solution Snapshot Website:
+
+![](images/createReleasePipeline/createReleasePipeline9.png)
+
+For choosing the script path you can click the 3 dots to the right of the box and choose the path based on where you published the artifacts in your build pipeline:
+
+![](images/createReleasePipeline/createReleasePipeline10.png)
+
+The arguments for the script are in the following order:
+- Salesforce Community Username
+- Salesforce Community Password
+- Relativity Application Guid
+- Relativity Application Version
+- Compatible Instance Relativity Version
+- Path to Relativity Application
+
+Lastly, we want to set up the triggers for the release pipeline so that it runs after the master build runs
+- For the artifact trigger it will look like the following:
+![](images/createReleasePipeline/createReleasePipeline11.png)
+
+- For the Stages trigger it will look like the following
+![](images/createReleasePipeline/createReleasePipeline12.png)
+
+Now this will automatically kick off the release pipeline after the build pipeline passes for the master branch.

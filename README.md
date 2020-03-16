@@ -79,9 +79,46 @@ We're going to walk through some common tasks that we believe a solid CI/CD pipe
 - Create a Release Pipeline to Push the created Rap file to the Solution Snapshot Website.
 
 **NOTE**: that you may use any combination of these tasks which make sense for your development needs.
-You can copy the code which we show or add tasks manually using the built in Tasks explorer, seen here when editing your pipeline:!
+You can copy the code which we show or add tasks manually using the built in Tasks explorer, seen here when editing your pipeline:
+
 ![](images/tasksView.png)
+
 Make sure that when you are editing the azure-pipelines.yml file that you are on the azure-pipelines branch:
+
 ![](images/azurePipelinesBranchView.png)
 
 ### New Variable Group
+One of the first things we want to do is set up a Variable group. To do this click on your pipeline and select the Library tab.
+
+![](images/newVariableGroup/newVariableGroup1.png)
+
+On this page, click *+ Variable Group*.
+
+![](images/newVariableGroup/newVariableGroup2.png)
+
+As you can see below we have created 4 varaibles:
+- *applicationGuid* - This is the Guid of our Relativity Application
+- *buildVersion* - The current master version of the Relativity Application. 
+- *salesforceUsername* - Your community account username
+- *salesforcePassword* - Your community account password
+
+**NOTE**: *applicationGuid*, *salesforceUsername*, and *salesforcePassword* will only be used if you would like to Upload a created RAP file to the Solution Snapshot Website.
+
+![](images/newVariableGroup/newVariableGroup3.png)
+
+Next you want to link this Variable Group to your pipeline. In the Pipelines tab click on your pipeline and then click the *Edit* button.
+
+![](images/newVariableGroup/newVariableGroup4.png)
+
+Click the three dot dropdown and select *Triggers*.
+
+![](images/newVariableGroup/newVariableGroup5.png)
+
+Click the *Variables* tab, then *Variable Groups* and select *Link variable group*. Next, select the Variable Group that we created.
+
+![](images/newVariableGroup/newVariableGroup6.png)
+![](images/newVariableGroup/newVariableGroup7.png)
+
+Lastly, remember to Save.
+
+![](images/newVariableGroup/newVariableGroup8.png)

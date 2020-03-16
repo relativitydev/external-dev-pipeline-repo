@@ -122,3 +122,13 @@ Click the *Variables* tab, then *Variable Groups* and select *Link variable grou
 Lastly, remember to Save.
 
 ![](images/newVariableGroup/newVariableGroup8.png)
+
+### New Azure Key Vault Variable Group
+Adding Azure Key Vault Secrets to a Variable Group is very similar to adding a variable group. 
+- Instead of adding in every secret manually, you can choose the *Link secrets from an Azure key vault* as variables option.
+- Next, you specify the Azure subscription where the key vault you want to use has been created and select the Key vault name.
+- You may have to authorize your azure pipeline to access your subscription and key vault 
+- Now when you add variables you can choose which key vault secrets you would like to include as variables in the variable group
+- After adding the variables, save and make sure you link the variable group to your pipeline like how we did above.
+
+![](images/newKeyVaultVariableGroup.png)

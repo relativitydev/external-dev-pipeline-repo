@@ -64,7 +64,7 @@ You can add additional scripts or tasks as steps to your pipeline. A task is a p
 
 A list of tasks you can add to your pipeline can be found here: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/?view=azure-devops .
 
-**NOTE**: For the full example .yml file you can view the azure-pipelines.yml file in this repository.
+**NOTE**: For the full example .yml file you can view the azure-pipelines.yml file in this repository [Here](azure-pipelines.yml).
 
 We're going to walk through some common tasks that we believe a solid CI/CD pipeline for Relativity RAP files should have. The tasks which we have created are:
 
@@ -397,7 +397,23 @@ Lastly, we want to set up the triggers for the release pipeline so that it runs 
 - For the artifact trigger it will look like the following:
 ![](images/createReleasePipeline/createReleasePipeline11.png)
 
-- For the Stages trigger it will look like the following
+- For the Stages trigger it will look like the following:
 ![](images/createReleasePipeline/createReleasePipeline12.png)
 
 Now this will automatically kick off the release pipeline after the build pipeline passes for the master branch.
+
+### Setting Up Github to require builds to pass on Pull Requests
+- In your Github Repo, go to the Settings tab and select the Branches tab under that.
+- Next, click the Add rule button under Branch protection rules.
+
+![](images/setupGithubRules/setupGithubRules1.png)
+
+You want to add a rule for both the develop and master branches. The rules that you want to check are:
+- Require status checks to pass before merging
+- Require branches to be up to date before merging
+  - Then check the name of your pipeline
+
+![](images/setupGithubRules/setupGithubRules2.png)
+
+### Slack Notifications for Azure Pipelines
+If you use Slack, you can use the Azure Pipelines app for Slack to easily monitor the events for your pipelines. Set up and manage subscriptions for builds, releases, YAML pipelines, pending approvals and more from the app and get notifications for these events in your Slack channels. You can learn more here: https://docs.microsoft.com/en-us/azure/devops/pipelines/integrations/slack?view=azure-devops

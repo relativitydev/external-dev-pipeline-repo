@@ -38,6 +38,17 @@ The basic steps are these:
 4. Your code is now updated, built, tested, and packaged. It can be deployed to any target.
 
 ## Create your pipeline
-Prerequisites
+###Prerequisites
 - A GitHub account, where you can create a repository. If you don't have one, you can create one for free.
 - An Azure DevOps organization. If you don't have one, you can create one for free. (An Azure DevOps organization is different from your GitHub organization. Give them the same name if you want alignment between them.) If your team already has one, then make sure you're an administrator of the Azure DevOps project that you want to use.
+### Setup your first *azure-pipelines.yml* file
+1. Sign in to your Azure DevOps organization and navigate to your project.
+2. In your project, navigate to the Pipelines page. Then choose the action to create a new pipeline.
+3. Walk through the steps of the wizard by first selecting GitHub as the location of your source code.
+4. You might be redirected to GitHub to sign in. If so, enter your GitHub credentials.
+5. When the list of repositories appears, select your desired sample app repository.
+6. Azure Pipelines will analyze your repository and choose the ASP.NET pipeline template. Select Save, then select Create a new branch for this commit with the branch name azure-pipelines. Uncheck Start a pull request. **NOTE**: This will be the branch that you will continue to work off of.
+### Understand the *azure-pipelines.yml* file
+A pipeline is defined using a YAML file in your repo. Usually, this file is named azure-pipelines.yml and is located at the root of your repo.
+- Navigate to the Pipelines page in Azure Pipelines and select the pipeline you created.
+- Select Edit in the context menu of the pipeline to open the YAML editor for the pipeline. Examine the contents of the YAML file.

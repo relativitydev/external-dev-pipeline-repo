@@ -37,8 +37,10 @@ The basic steps are these:
 3. Push your code to your version control repository. This action kicks off the default trigger to build and deploy and then monitor the results.
 4. Your code is now updated, built, tested, and packaged. It can be deployed to any target.
 
+For more info: https://docs.microsoft.com/en-us/azure/devops/pipelines/get-started/pipelines-get-started?view=azure-devops
+
 ## Create your pipeline
-###Prerequisites
+### Prerequisites
 - A GitHub account, where you can create a repository. If you don't have one, you can create one for free.
 - An Azure DevOps organization. If you don't have one, you can create one for free. (An Azure DevOps organization is different from your GitHub organization. Give them the same name if you want alignment between them.) If your team already has one, then make sure you're an administrator of the Azure DevOps project that you want to use.
 ### Setup your first *azure-pipelines.yml* file
@@ -52,3 +54,5 @@ The basic steps are these:
 A pipeline is defined using a YAML file in your repo. Usually, this file is named azure-pipelines.yml and is located at the root of your repo.
 - Navigate to the Pipelines page in Azure Pipelines and select the pipeline you created.
 - Select Edit in the context menu of the pipeline to open the YAML editor for the pipeline. Examine the contents of the YAML file.
+
+For more info: https://docs.microsoft.com/en-us/azure/devops/pipelines/customize-pipeline?view=azure-devops

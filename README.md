@@ -54,5 +54,34 @@ For more info: https://docs.microsoft.com/en-us/azure/devops/pipelines/get-start
 A pipeline is defined using a YAML file in your repo. Usually, this file is named azure-pipelines.yml and is located at the root of your repo.
 - Navigate to the Pipelines page in Azure Pipelines and select the pipeline you created.
 - Select Edit in the context menu of the pipeline to open the YAML editor for the pipeline. Examine the contents of the YAML file.
+![](images/understandYaml.png)
+This pipeline runs whenever your team pushes a change to the master branch of your repo. This pipeline restores the NuGet packages for the solution, builds the solution, and then runs the tests for the solution.
 
 For more info: https://docs.microsoft.com/en-us/azure/devops/pipelines/customize-pipeline?view=azure-devops
+
+## Customize Azure Pipelines to be a Relativity Rap File CI/CD
+You can add additional scripts or tasks as steps to your pipeline. A task is a pre-packaged script. You can use tasks for building, testing, publishing, or deploying your app.
+
+A list of tasks you can add to your pipeline can be found here: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/?view=azure-devops .
+
+**NOTE**: For the full example .yml file you can view the azure-pipelines.yml file in this repository.
+
+We're going to walk through some common tasks that we believe a solid CI/CD pipeline for Relativity RAP files should have. The tasks which we have created are:
+
+- Create New Variable Groups
+- Create New Azure Key Vault Variable Group
+- Restore NuGet Packages
+- Build Repository
+- Run Unit Tests
+- Run Integration Tests
+- Run Rap Builder to create Rap File
+- Publish Rap File to Azure Pipelines
+- Create a Release Pipeline to Push the created Rap file to the Solution Snapshot Website.
+
+**NOTE**: that you may use any combination of these tasks which make sense for your development needs.
+You can copy the code which we show or add tasks manually using the built in Tasks explorer, seen here when editing your pipeline:!
+![](images/tasksView.png)
+Make sure that when you are editing the azure-pipelines.yml file that you are on the azure-pipelines branch:
+![](images/azurePipelinesBranchView.png)
+
+### New Variable Group

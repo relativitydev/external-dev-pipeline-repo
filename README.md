@@ -64,7 +64,7 @@ You can add additional scripts or tasks as steps to your pipeline. A task is a p
 
 A list of tasks you can add to your pipeline can be found here: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/?view=azure-devops .
 
-**NOTE**: For the full example .yml file you can view the azure-pipelines.yml file in this repository [Here](azure-pipelines.yml).
+**NOTE**: For the full example .yml file you can view the azure-pipelines.yml file in this repository [here](azure-pipelines.yml).
 
 We're going to walk through some common tasks that we believe a solid CI/CD pipeline for Relativity RAP files should have. The tasks which we have created are:
 
